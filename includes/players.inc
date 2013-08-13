@@ -12,7 +12,7 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     $this->description = t('Import player data from the Lahman database.');
 
     $query = $this->getConnection()->select('master', 'm')
-      ->fields('m', array('playerID', 'nameFirst', 'nameLast'))
+      ->fields('m', array('playerID', 'nameFirst', 'nameLast', 'birthDay', 'birthMonth', 'birthYear', 'deathDay', 'deathMonth', 'deathYear', 'nameNick', 'nameNote', 'weight', 'height', 'bats', 'throws'))
       ->isNotNull('m.playerID');
 
     $this->source = new MigrateSourceSQL($query);
@@ -35,5 +35,40 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     );
 
     $this->addFieldMapping('title', 'nameFirst');
+
+    // Additional field mappings.
+    $this->addFieldMapping('field_player_nick_name', 'nameNick');
+    $this->addFieldMapping('field_player_height', 'height');
+    $this->addFieldMapping('field_player_weight', 'weight');
+    $this->addFieldMapping('field_player_bats', 'bats');
+    $this->addFieldMapping('field_player_throws', 'throws');
+
+    $this->addFieldMapping('field_player_notes', 'nameNote');
+    // Example of setting the value of a subfield.
+    $this->addFieldMapping('field_player_notes:format')
+      ->defaultValue('plain_text');
+
+    // Example of setting a default value for a field.
+    $this->addFieldMapping('log')
+      ->defaultValue('Imported by player migration.');
+
+    // List of destination fields that we have no intention of migrating.
+    $this->addUnmigratedDestinations(array(
+      'field_player_notes:language',
+      'uid',
+      'created',
+      'changed',
+      'status',
+      'promote',
+      'sticky',
+      'revision',
+      'language',
+      'tnid',
+      'translate',
+      'revision_uid',
+      'is_new',
+      'field_player_nick_name:language',
+      'comment',
+    ));
   }
 }
