@@ -43,7 +43,9 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     $this->addFieldMapping('field_player_bats', 'bats');
     $this->addFieldMapping('field_player_throws', 'throws');
 
-    $this->addFieldMapping('field_player_notes', 'nameNote');
+    $this->addFieldMapping('field_player_notes', 'nameNote')
+      ->callbacks(array($this, 'prependTextNotes'));
+
     // Example of setting the value of a subfield.
     $this->addFieldMapping('field_player_notes:format')
       ->defaultValue('plain_text');
@@ -51,6 +53,10 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     // Example of setting a default value for a field.
     $this->addFieldMapping('log')
       ->defaultValue('Imported by player migration.');
+
+    // Date fields.
+    $this->addFieldMapping('field_player_birthday', 'birthday');
+    $this->addFieldMapping('field_player_death', 'death');
 
     // List of destination fields that we have no intention of migrating.
     $this->addUnmigratedDestinations(array(
@@ -71,4 +77,28 @@ class SportsBallPlayerMigration extends SportsBallMigration {
       'comment',
     ));
   }
+
+  function prepareRow($row) {
+    //drush_print_r($row);
+
+    $row->nameFirst = $row->nameFirst . ' ' . $row->nameLast;
+
+    if (isset($row->birthYear)) {
+      $row->birthday = $row->birthYear . '/' . $row->birthMonth . '/' . $row->birthDay;
+    }
+    if (isset($row->deathYear)) {
+      $row->death = $row->deathYear . '/' . $row->deathMonth . '/' . $row->deathDay;
+    }
+
+  }
+
+
+  public function prependTextNotes($row) {
+    return 'Imported notes: ' . $row;
+  }
+
+
+
+
+
 }
