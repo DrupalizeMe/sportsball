@@ -40,7 +40,13 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     $this->addFieldMapping('field_player_nick_name', 'nameNick');
     $this->addFieldMapping('field_player_height', 'height');
     $this->addFieldMapping('field_player_weight', 'weight');
-    $this->addFieldMapping('field_player_bats', 'bats');
+
+    $this->addFieldMapping('field_player_bats', 'bats')
+      ->description(t('What about batters who can hit switch?'))
+      ->issueGroup(t('Questions'))
+      ->issuePriority(MigrateFieldMapping::ISSUE_PRIORITY_BLOCKER)
+      ->issueNumber(1);
+
     $this->addFieldMapping('field_player_throws', 'throws');
 
     $this->addFieldMapping('field_player_notes', 'nameNote')
@@ -52,17 +58,20 @@ class SportsBallPlayerMigration extends SportsBallMigration {
 
     // Example of setting a default value for a field.
     $this->addFieldMapping('log')
-      ->defaultValue('Imported by player migration.');
+      ->defaultValue('Imported by player migration.')
+      ->description(t('We are prepending data to any field that has data.'));
 
     // Date fields.
     $this->addFieldMapping('field_player_birthday', 'birthday');
     $this->addFieldMapping('field_player_death', 'death');
 
+    $this->addFieldMapping('created')
+      ->issueGroup(t('DNM'));
+
     // List of destination fields that we have no intention of migrating.
     $this->addUnmigratedDestinations(array(
       'field_player_notes:language',
       'uid',
-      'created',
       'changed',
       'status',
       'promote',
