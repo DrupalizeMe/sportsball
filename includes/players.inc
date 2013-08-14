@@ -22,6 +22,8 @@ class SportsBallPlayerMigration extends SportsBallMigration {
       ->orderBy('a.yearID', 'DESC')
       ->orderBy('m.playerID');
 
+    $query->addExpression('GROUP_CONCAT(a.teamID)', 'teams');
+
     $this->source = new MigrateSourceSQL($query);
 
     $this->destination = new MigrateDestinationNode('player');
@@ -72,7 +74,8 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     $this->addFieldMapping('field_player_birthday', 'birthday');
     $this->addFieldMapping('field_player_death', 'death');
 
-    $this->addFieldMapping('field_player_teams', 'teamID')
+    $this->addFieldMapping('field_player_teams', 'teams')
+      ->separator(',')
       ->sourceMigration(array('SportsBallTeams'));
 
     $this->addFieldMapping('created')
@@ -108,6 +111,20 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     if (isset($row->deathYear)) {
       $row->death = $row->deathYear . '/' . $row->deathMonth . '/' . $row->deathDay;
     }
+
+    /*
+    $teams = array();
+    $results = $this->getConnection()->select('appearances', 'a')
+      ->fields('a', array('teamID'))
+      ->condition('playerID', $row->playerID)
+      ->execute();
+
+    foreach ($results as $res) {
+      $teams[] = $res->teamID;
+    }
+
+    $row->teamID = count($teams) ? $teams : NULL;
+    */
 
   }
 
