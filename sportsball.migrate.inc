@@ -27,6 +27,10 @@ function sportsball_migrate_api() {
         'class_name' => 'SportsBallPageMigration',
         'group_name' => 'content',
       ),
+      'SportsBallAwards' => array(
+        'class_name' => 'SportsBallAwardsMigration',
+        'group_name' => 'content',
+      ),
     ),
   );
 }
