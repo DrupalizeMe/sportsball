@@ -11,9 +11,16 @@ class SportsBallPlayerMigration extends SportsBallMigration {
 
     $this->description = t('Import player data from the Lahman database.');
 
+    $this->dependencies = array('SportsBallTeams');
+
     $query = $this->getConnection()->select('master', 'm')
       ->fields('m', array('playerID', 'nameFirst', 'nameLast', 'birthDay', 'birthMonth', 'birthYear', 'deathDay', 'deathMonth', 'deathYear', 'nameNick', 'nameNote', 'weight', 'height', 'bats', 'throws'))
       ->isNotNull('m.playerID');
+    $query->leftJoin('appearances', 'a', 'a.playerID = m.playerID');
+    $query->fields('a', array('teamID'))
+      ->groupBy('m.playerID')
+      ->orderBy('a.yearID', 'DESC')
+      ->orderBy('m.playerID');
 
     $this->source = new MigrateSourceSQL($query);
 
@@ -64,6 +71,9 @@ class SportsBallPlayerMigration extends SportsBallMigration {
     // Date fields.
     $this->addFieldMapping('field_player_birthday', 'birthday');
     $this->addFieldMapping('field_player_death', 'death');
+
+    $this->addFieldMapping('field_player_teams', 'teamID')
+      ->sourceMigration(array('SportsBallTeams'));
 
     $this->addFieldMapping('created')
       ->issueGroup(t('DNM'));

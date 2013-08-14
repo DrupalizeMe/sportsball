@@ -6,3 +6,4 @@ dependencies[] =  migrate
 
 files[] = includes/base.inc
 files[] = includes/players.inc
+files[] = includes/teams.inc
