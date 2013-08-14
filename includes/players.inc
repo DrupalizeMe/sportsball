@@ -11,8 +11,6 @@ class SportsBallPlayerMigration extends SportsBallMigration {
 
     $this->description = t('Import player data from the Lahman database.');
 
-    $this->dependencies = array('SportsBallTeams');
-
     $query = $this->getConnection()->select('master', 'm')
       ->fields('m', array('playerID', 'nameFirst', 'nameLast', 'birthDay', 'birthMonth', 'birthYear', 'deathDay', 'deathMonth', 'deathYear', 'nameNick', 'nameNote', 'weight', 'height', 'bats', 'throws'))
       ->isNotNull('m.playerID');
