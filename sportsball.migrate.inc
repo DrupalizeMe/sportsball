@@ -10,6 +10,9 @@ function sportsball_migrate_api() {
       'baseball' => array(
         'title' => t('Baseball'),
       ),
+      'content' => array(
+        'title' => t('Content'),
+      ),
     ),
     'migrations' => array(
       'SportsBallPlayers' => array(
@@ -19,6 +22,10 @@ function sportsball_migrate_api() {
       'SportsBallTeams' => array(
         'class_name' => 'SportsBallTeamMigration',
         'group_name' => 'baseball',
+      ),
+      'SportsBallPages' => array(
+        'class_name' => 'SportsBallPageMigration',
+        'group_name' => 'content',
       ),
     ),
   );
